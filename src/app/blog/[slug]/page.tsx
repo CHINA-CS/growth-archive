@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getNoteBySlug, getPublicNotes } from "@/lib/content";
 import { Markdown } from "@/components/Markdown";
 import { VisibilityBadge } from "@/components/VisibilityBadge";
-import { OrnateCorners } from "@/components/Ornate";
+import { ContentShell, PageHeader } from "@/components/PageChrome";
 
 export function generateStaticParams() {
   return getPublicNotes()
@@ -21,24 +21,19 @@ export default async function NoteDetailPage({ params }: { params: Promise<{ slu
   if (!note || note.visibility === "private") notFound();
 
   return (
-    <article className="mx-auto max-w-2xl space-y-8">
-      <header className="animate-riseIn space-y-3">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="chapter-num">Note</p>
-            <h1 className="mt-1 font-display text-2xl font-bold uppercase leading-tight tracking-wide2 text-slateink-deep">
-              {note.title}
-            </h1>
-          </div>
-          <VisibilityBadge value={note.visibility} />
-        </div>
-        <p className="chapter-num">{new Date(note.updatedAt).toLocaleDateString("zh-CN")}</p>
-        <p className="text-slateink">{note.excerpt}</p>
-      </header>
-      <div className="plate plate-corners relative p-6 md:p-8">
-        <OrnateCorners />
+    <ContentShell>
+      <PageHeader
+        eyebrow="Note"
+        title={note.title}
+        lead={note.excerpt}
+        action={<VisibilityBadge value={note.visibility} />}
+      />
+      <p className="chapter-num mb-8">
+        {new Date(note.updatedAt).toLocaleDateString("zh-CN")}
+      </p>
+      <div className="max-w-[68ch] border-t border-slateink/20 pt-8">
         <Markdown>{note.body}</Markdown>
       </div>
-    </article>
+    </ContentShell>
   );
 }

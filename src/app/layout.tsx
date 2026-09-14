@@ -63,9 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </Link>
             </div>
           </header>
-          <main className="min-h-[70vh] [&>*:not(:first-child)]:mx-auto [&>*:not(:first-child)]:max-w-6xl [&>*:not(:first-child)]:px-6 [&>*:not(:first-child)]:py-12">
-            {children}
-          </main>
+          <main className="min-h-[70vh]">{children}</main>
           <footer className="border-t border-slateink/20 py-8 text-center">
             <p className="chapter-num !tracking-wide3">
               Personal growth archive · Defaults to private

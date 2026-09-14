@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getPublicTools } from "@/lib/content";
+import { ContentShell, EmptyNote, IndexRow, PageHeader } from "@/components/PageChrome";
 
 export const metadata: Metadata = { title: "工具" };
 
@@ -7,38 +8,45 @@ export default function ToolsPage() {
   const tools = getPublicTools().filter((t) => t.visibility !== "private");
 
   return (
-    <div className="space-y-8">
-      <header className="animate-riseIn">
-        <p className="chapter-num">Toolkit</p>
-        <h1 className="mt-1 font-display text-2xl font-bold uppercase tracking-wide2 text-slateink-deep">
-          工具箱
-        </h1>
-      </header>
-      <div className="grid gap-4 md:grid-cols-2">
-        {tools.map((t) => (
-          <div key={t.id} className="plate plate-hover plate-corners p-5">
-            <div className="flex items-start justify-between gap-2">
-              <h2 className="font-display text-sm font-bold uppercase tracking-wide text-slateink-deep">
-                {t.name}
-              </h2>
-              <span className="chapter-num">{t.category}</span>
-            </div>
-            <p className="mt-2 text-sm text-slateink">{t.scenes}</p>
-            <div className="mt-4 flex items-center justify-between chapter-num">
-              <span>
-                {"◆".repeat(t.level)}
-                <span className="text-slateink-mute">{"◇".repeat(Math.max(0, 5 - t.level))}</span>
-              </span>
-              {t.link && (
-                <a href={t.link} className="nav-link" target="_blank" rel="noreferrer">
-                  Link
-                </a>
-              )}
-            </div>
-          </div>
-        ))}
-        {tools.length === 0 && <p className="text-sm text-slateink-soft">暂无公开工具。</p>}
-      </div>
-    </div>
+    <ContentShell>
+      <PageHeader
+        eyebrow="Toolkit"
+        title="工具箱"
+        lead="日常开发里真正用得上的工具，以及它们解决过的问题。"
+      />
+
+      {tools.length === 0 ? (
+        <EmptyNote>暂无公开工具。</EmptyNote>
+      ) : (
+        <div className="border-t border-slateink/20">
+          {tools.map((t, i) => (
+            <IndexRow
+              key={t.id}
+              index={i + 1}
+              title={t.name}
+              meta={t.category}
+              excerpt={t.scenes}
+              trailing={
+                <div className="flex items-center gap-3">
+                  <span className="font-display text-[11px] tracking-wide2 text-slateink-mute">
+                    LV.{t.level}
+                  </span>
+                  {t.link && (
+                    <a
+                      href={t.link}
+                      className="nav-link"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Link
+                    </a>
+                  )}
+                </div>
+              }
+            />
+          ))}
+        </div>
+      )}
+    </ContentShell>
   );
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { loadContent } from "@/lib/content";
-import { OrnateCorners, DoubleRule } from "@/components/Ornate";
+import { ContentShell, EmptyNote, PageHeader } from "@/components/PageChrome";
 
 export const metadata: Metadata = { title: "关于" };
 
@@ -9,64 +9,73 @@ export default function AboutPage() {
   const visibleExp = experiences.filter((e) => e.visibility !== "private");
 
   return (
-    <div className="mx-auto max-w-2xl space-y-10">
-      <header className="animate-riseIn">
-        <p className="chapter-num">About</p>
-        <h1 className="mt-1 font-display text-2xl font-bold uppercase tracking-wide2 text-slateink-deep">
-          关于我
-        </h1>
-        <p className="mt-2 text-sm text-slateink">
-          {profile.title}
-          {profile.location ? ` · ${profile.location}` : ""}
-        </p>
-      </header>
-      <div className="plate plate-corners relative p-6">
-        <OrnateCorners />
-        <p className="leading-7 text-slateink-deep">{profile.bio}</p>
-        <DoubleRule className="my-5" />
-        <div className="flex flex-wrap gap-3">
-          {profile.links.map((l) => (
-            <a key={l.url} href={l.url} className="btn-tale !px-4 !py-2 !text-[0.62rem]" target={l.url.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
-              {l.label}
-            </a>
-          ))}
-          {profile.email && (
-            <a href={`mailto:${profile.email}`} className="btn-tale !px-4 !py-2 !text-[0.62rem]">
-              {profile.email}
-            </a>
+    <ContentShell>
+      <PageHeader
+        eyebrow="About"
+        title="关于我"
+        lead={[profile.title, profile.location].filter(Boolean).join(" · ")}
+      />
+
+      <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
+        <div>
+          <div className="max-w-[60ch] text-[13.5px] leading-8 text-slateink-deep">
+            {profile.bio}
+          </div>
+          {(profile.links.length > 0 || profile.email) && (
+            <div className="mt-10 flex flex-wrap gap-3">
+              {profile.links.map((l) => (
+                <a
+                  key={l.url}
+                  href={l.url}
+                  className="btn-tale !px-4 !py-2 !text-[10px]"
+                  target={l.url.startsWith("http") ? "_blank" : undefined}
+                  rel="noreferrer"
+                >
+                  {l.label}
+                </a>
+              ))}
+              {profile.email && (
+                <a href={`mailto:${profile.email}`} className="btn-tale !px-4 !py-2 !text-[10px]">
+                  Email
+                </a>
+              )}
+            </div>
           )}
         </div>
-      </div>
 
-      {visibleExp.length > 0 && (
-        <section>
+        <aside>
           <h2 className="section-rule mb-5 font-display text-sm font-bold uppercase tracking-wide2 text-slateink-deep">
             经历
           </h2>
-          <div className="space-y-4">
-            {visibleExp.map((e) => (
-              <article key={e.id} className="plate plate-hover plate-corners p-5">
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <h3 className="font-display text-sm font-bold uppercase tracking-wide text-slateink-deep">
-                    {e.org} · {e.title}
-                  </h3>
-                  <span className="chapter-num">
+          {visibleExp.length === 0 ? (
+            <EmptyNote>暂无公开经历。</EmptyNote>
+          ) : (
+            <ul className="space-y-6">
+              {visibleExp.map((e) => (
+                <li key={e.id} className="border-b border-slateink/15 pb-5">
+                  <div className="chapter-num">
                     {e.start} – {e.end || "至今"}
-                  </span>
-                </div>
-                <ul className="mt-2 space-y-1 text-sm text-slateink">
-                  {e.bullets.map((b) => (
-                    <li key={b} className="flex gap-2">
-                      <span className="text-slateink-soft">—</span>
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            ))}
-          </div>
-        </section>
-      )}
-    </div>
+                  </div>
+                  <h3 className="mt-1 font-display text-[14px] font-bold uppercase tracking-[0.1em] text-slateink-deep">
+                    {e.org}
+                  </h3>
+                  <p className="text-[12.5px] text-slateink">{e.title}</p>
+                  {e.bullets.length > 0 && (
+                    <ul className="mt-2 space-y-1 text-[12px] text-slateink">
+                      {e.bullets.map((b) => (
+                        <li key={b} className="flex gap-2">
+                          <span className="text-slateink-soft">—</span>
+                          {b}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </aside>
+      </div>
+    </ContentShell>
   );
 }

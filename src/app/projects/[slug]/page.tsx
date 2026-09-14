@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProjectBySlug, getPublicProjects, loadContent } from "@/lib/content";
-import { Badge } from "@/components/Badge";
 import { Markdown } from "@/components/Markdown";
 import { VisibilityBadge } from "@/components/VisibilityBadge";
 import { MediaGallery } from "@/components/MediaGallery";
-import { OrnateCorners, DoubleRule } from "@/components/Ornate";
+import { ContentShell, MetaBlock, PageHeader } from "@/components/PageChrome";
 
 export function generateStaticParams() {
   return getPublicProjects()
@@ -30,67 +29,70 @@ export default async function ProjectDetailPage({
   const related = media.filter((m) => project.mediaIds.includes(m.id) && m.visibility !== "private");
 
   return (
-    <article className="mx-auto max-w-3xl space-y-8">
-      <header className="animate-riseIn space-y-4">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="chapter-num">Project</p>
-            <h1 className="mt-1 font-display text-2xl font-bold uppercase leading-tight tracking-wide2 text-slateink-deep">
-              {project.title}
-            </h1>
-          </div>
-          <VisibilityBadge value={project.visibility} />
-        </div>
-        <p className="text-slateink">{project.summary}</p>
-        <div className="flex flex-wrap gap-1.5">
-          {project.stack.map((s) => (
-            <Badge key={s}>{s}</Badge>
-          ))}
-        </div>
-        <div className="grid gap-3 pt-1 sm:grid-cols-3">
-          <Meta label="角色" value={project.role} />
-          <Meta label="状态" value={project.status} />
-          <Meta label="标签" value={project.tags.join("、") || "—"} />
-        </div>
-        {project.metrics.length > 0 && (
-          <div className="grid gap-3 sm:grid-cols-2">
-            {project.metrics.map((m) => (
-              <div key={m.label} className="plate px-4 py-3">
-                <div className="chapter-num">{m.label}</div>
-                <div className="mt-1 font-display text-sm font-semibold text-slateink-deep">
-                  {m.value}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </header>
+    <ContentShell wide>
+      <PageHeader
+        eyebrow="Case study"
+        title={project.title}
+        lead={project.summary}
+        action={<VisibilityBadge value={project.visibility} />}
+      />
 
-      <section>
-        <h2 className="section-rule mb-4 font-display text-sm font-bold uppercase tracking-wide2 text-slateink-deep">
-          说明
-        </h2>
-        <div className="plate plate-corners relative p-6 md:p-8">
-          <OrnateCorners />
-          <Markdown>{project.body || "（暂无正文）"}</Markdown>
+      <div className="grid gap-10 lg:grid-cols-[220px_1fr] lg:gap-14">
+        {/* 左侧元数据轨 */}
+        <aside className="space-y-0 lg:sticky lg:top-24 lg:self-start">
+          <MetaBlock label="Role" value={project.role} />
+          <MetaBlock label="Status" value={project.status} />
+          <MetaBlock label="Stack" value={project.stack.join(" / ") || "—"} />
+          <MetaBlock label="Tags" value={project.tags.join("、") || "—"} />
+          {project.metrics.length > 0 && (
+            <div className="pt-5">
+              <p className="chapter-num mb-3">Metrics</p>
+              <ul className="space-y-3">
+                {project.metrics.map((m) => (
+                  <li key={m.label}>
+                    <div className="text-[11px] uppercase tracking-wide2 text-slateink-mute">
+                      {m.label}
+                    </div>
+                    <div className="mt-0.5 font-display text-[13px] font-semibold text-slateink-deep">
+                      {m.value}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </aside>
+
+        {/* 正文 */}
+        <div className="min-w-0 space-y-12">
+          {project.cover && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={project.cover}
+              alt={project.title}
+              className="w-full border border-slateink/30"
+            />
+          )}
+
+          <section>
+            <h2 className="section-rule mb-5 font-display text-sm font-bold uppercase tracking-wide2 text-slateink-deep">
+              说明
+            </h2>
+            <div className="max-w-[68ch]">
+              <Markdown>{project.body || "（暂无正文）"}</Markdown>
+            </div>
+          </section>
+
+          {related.length > 0 && (
+            <section>
+              <h2 className="section-rule mb-5 font-display text-sm font-bold uppercase tracking-wide2 text-slateink-deep">
+                素材 · Code & Screens
+              </h2>
+              <MediaGallery items={related} />
+            </section>
+          )}
         </div>
-      </section>
-
-      <section>
-        <h2 className="section-rule mb-4 font-display text-sm font-bold uppercase tracking-wide2 text-slateink-deep">
-          素材
-        </h2>
-        <MediaGallery items={related} />
-      </section>
-    </article>
-  );
-}
-
-function Meta({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="plate px-4 py-3">
-      <div className="chapter-num">{label}</div>
-      <div className="mt-1 text-sm text-slateink-deep">{value || "—"}</div>
-    </div>
+      </div>
+    </ContentShell>
   );
 }
