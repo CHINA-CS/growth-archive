@@ -49,10 +49,21 @@ export function LandingExperience({ name, title, bio, featured }: Props) {
     const t1 = setTimeout(() => setCircleIn(true), 40);
     const t2 = setTimeout(() => setMarkIn(true), 700);
     const t3 = setTimeout(() => setEnterIn(true), 1200);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setPhase("hero");
+      }
+    };
+    const onClick = () => setPhase("hero");
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("click", onClick);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("click", onClick);
     };
   }, [phase]);
 
@@ -86,15 +97,17 @@ export function LandingExperience({ name, title, bio, featured }: Props) {
           }`}
         >
           <p className="chapter-num mb-3 text-[#5b6a8a]">A Personal Growth Tale</p>
-          <h1 className="display-xl max-w-[12ch] text-center text-[#5b6a8a]">{name}</h1>
-          <p className="mt-3 display-sm text-[#7d8aa3]">{title}</p>
+          <div className="flex items-center justify-center gap-6">
+            <h1 className="display-xl text-[#5b6a8a]">{name}</h1>
+          </div>
+          <p className="mt-4 display-sm text-[#7d8aa3]">{title}</p>
         </div>
 
-        {/* 圆形 Enter —— 对齐原站 circle cursor CTA */}
+        {/* 圆形 Enter —— 字标下方，避免压住姓名 */}
         <button
           type="button"
           onClick={() => setPhase("hero")}
-          className={`absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[#3d4a68] bg-[#f3eee3]/90 font-display text-[11px] font-bold uppercase tracking-[0.2em] text-[#3d4a68] transition-all duration-500 hover:scale-110 hover:bg-[#ebe4d4] ${
+          className={`absolute left-1/2 top-[58%] flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[#3d4a68] bg-[#f3eee3]/90 font-display text-[11px] font-bold uppercase tracking-[0.2em] text-[#3d4a68] transition-all duration-500 hover:scale-110 hover:bg-[#ebe4d4] ${
             enterIn ? "scale-100 opacity-100" : "scale-75 opacity-0 pointer-events-none"
           }`}
           aria-label="Enter experience"
@@ -118,7 +131,7 @@ export function LandingExperience({ name, title, bio, featured }: Props) {
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-[linear-gradient(180deg,transparent,rgba(45,58,82,0.55)_45%,rgba(40,52,74,0.72))]" />
           <div className="relative z-10 flex flex-col items-center">
             <p className="chapter-num mb-3 text-[#f4efe4]/85 drop-shadow-[0_1px_6px_rgba(20,30,50,0.55)]">
-              Nomadic Growth · A Personal Tale
+              Chapter 02 · Chrysanthemum
             </p>
             <h1 className="display-xl max-w-[14ch] text-[#f8f4ec] drop-shadow-[0_4px_24px_rgba(20,30,50,0.55)]">
               {name}
