@@ -68,70 +68,20 @@ function FlowerInstance({
 
 function Ground() {
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.4, 0]}>
-      <circleGeometry args={[24, 64]} />
-      <meshStandardMaterial color="#a8b090" roughness={1} />
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.42, 0]}>
+      <circleGeometry args={[30, 64]} />
+      <meshStandardMaterial color="#9aa888" roughness={1} />
     </mesh>
   );
 }
 
-/** 远山：淡入雾色，不抢前景 */
-function DistantHills() {
-  const layers = useMemo(() => {
-    const make = (w: number, h: number, seg: number, y: number, z: number, color: string, amp: number) => {
-      const g = new THREE.PlaneGeometry(w, h, seg, 3);
-      const pos = g.attributes.position as THREE.BufferAttribute;
-      for (let i = 0; i < pos.count; i++) {
-        const x = pos.getX(i);
-        const yy = pos.getY(i);
-        pos.setZ(i, (Math.sin(x * 0.22) * 0.6 + Math.cos(x * 0.09 + yy * 0.5) * 0.9) * amp);
-      }
-      g.computeVertexNormals();
-      return { g, y, z, color };
-    };
-    return [
-      make(56, 12, 24, 0.2, -16, "#c4b0b4", 1.0),
-      make(50, 9, 20, -0.2, -12, "#b0a8a0", 0.8),
-    ];
-  }, []);
-
+/** 远处更淡的地平色，靠雾融入天空，不用立体山 */
+function Horizon() {
   return (
-    <>
-      {layers.map((l, i) => (
-        <mesh key={i} geometry={l.g} position={[0, l.y, l.z]} rotation={[-0.08, 0, 0]}>
-          <meshStandardMaterial color={l.color} roughness={1} />
-        </mesh>
-      ))}
-    </>
-  );
-}
-
-/** 草：细长锥体，稀疏、矮、色偏暖绿 */
-function GrassField() {
-  const count = 120;
-  const ref = useRef<THREE.InstancedMesh>(null);
-  const dummy = useMemo(() => new THREE.Object3D(), []);
-
-  useEffect(() => {
-    if (!ref.current) return;
-    for (let i = 0; i < count; i++) {
-      const a = Math.random() * Math.PI * 2;
-      const r = 1.5 + Math.random() * 9;
-      dummy.position.set(Math.cos(a) * r, -1.36, Math.sin(a) * r * 0.65 - 0.5);
-      dummy.rotation.set(0, Math.random() * Math.PI, (Math.random() - 0.5) * 0.25);
-      const s = 0.22 + Math.random() * 0.28;
-      dummy.scale.set(0.04 + Math.random() * 0.03, s, 0.04);
-      dummy.updateMatrix();
-      ref.current.setMatrixAt(i, dummy.matrix);
-    }
-    ref.current.instanceMatrix.needsUpdate = true;
-  }, [dummy]);
-
-  return (
-    <instancedMesh ref={ref} args={[undefined, undefined, count]}>
-      <coneGeometry args={[0.45, 1.4, 3]} />
-      <meshStandardMaterial color="#8a9a72" roughness={1} flatShading />
-    </instancedMesh>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.4, -10]}>
+      <circleGeometry args={[36, 48]} />
+      <meshStandardMaterial color="#c4b4a8" roughness={1} />
+    </mesh>
   );
 }
 
@@ -222,15 +172,14 @@ function Scene({
   return (
     <>
       <color attach="background" args={["#e8c8c4"]} />
-      <fog attach="fog" args={["#e4c0bc", 12, 32]} />
-      <ambientLight intensity={1.2} color="#f5ebe4" />
-      <directionalLight position={[4, 8, 3]} intensity={1.4} color="#fff6f0" />
-      <directionalLight position={[-3, 4, -2]} intensity={0.55} color="#b8d0e0" />
+      <fog attach="fog" args={["#e4c0bc", 14, 36]} />
+      <ambientLight intensity={1.25} color="#f5ebe4" />
+      <directionalLight position={[4, 8, 3]} intensity={1.45} color="#fff6f0" />
+      <directionalLight position={[-3, 4, -2]} intensity={0.5} color="#b8d0e0" />
 
       <CameraRig progress={scrollProgress} active={active} />
       <Ground />
-      <GrassField />
-      <DistantHills />
+      <Horizon />
       <Pollen />
 
       {FLOWER_SPOTS.map((f, i) => (
