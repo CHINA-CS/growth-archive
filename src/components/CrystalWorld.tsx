@@ -68,30 +68,125 @@ function FlowerInstance({
 
 function Ground() {
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.35, 0]}>
-      <circleGeometry args={[16, 48]} />
-      <meshStandardMaterial color="#9a8a78" roughness={1} />
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.4, 0]}>
+      <circleGeometry args={[24, 64]} />
+      <meshStandardMaterial color="#a8b090" roughness={1} />
     </mesh>
   );
 }
 
+/** 远山：淡入雾色，不抢前景 */
 function DistantHills() {
-  const mesh = useMemo(() => {
-    const g = new THREE.PlaneGeometry(40, 10, 24, 5);
-    const pos = g.attributes.position as THREE.BufferAttribute;
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i);
-      pos.setZ(i, Math.sin(x * 0.35) * 0.7 + Math.cos(x * 0.12) * 1.1);
-    }
-    g.computeVertexNormals();
-    return g;
+  const layers = useMemo(() => {
+    const make = (w: number, h: number, seg: number, y: number, z: number, color: string, amp: number) => {
+      const g = new THREE.PlaneGeometry(w, h, seg, 3);
+      const pos = g.attributes.position as THREE.BufferAttribute;
+      for (let i = 0; i < pos.count; i++) {
+        const x = pos.getX(i);
+        const yy = pos.getY(i);
+        pos.setZ(i, (Math.sin(x * 0.22) * 0.6 + Math.cos(x * 0.09 + yy * 0.5) * 0.9) * amp);
+      }
+      g.computeVertexNormals();
+      return { g, y, z, color };
+    };
+    return [
+      make(56, 12, 24, 0.2, -16, "#c4b0b4", 1.0),
+      make(50, 9, 20, -0.2, -12, "#b0a8a0", 0.8),
+    ];
   }, []);
+
   return (
-    <mesh geometry={mesh} position={[0, -0.5, -10]} rotation={[-0.12, 0, 0]}>
-      <meshToonMaterial color="#7a8898" />
-    </mesh>
+    <>
+      {layers.map((l, i) => (
+        <mesh key={i} geometry={l.g} position={[0, l.y, l.z]} rotation={[-0.08, 0, 0]}>
+          <meshStandardMaterial color={l.color} roughness={1} />
+        </mesh>
+      ))}
+    </>
   );
 }
+
+/** 草：细长锥体，稀疏、矮、色偏暖绿 */
+function GrassField() {
+  const count = 120;
+  const ref = useRef<THREE.InstancedMesh>(null);
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    for (let i = 0; i < count; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const r = 1.5 + Math.random() * 9;
+      dummy.position.set(Math.cos(a) * r, -1.36, Math.sin(a) * r * 0.65 - 0.5);
+      dummy.rotation.set(0, Math.random() * Math.PI, (Math.random() - 0.5) * 0.25);
+      const s = 0.22 + Math.random() * 0.28;
+      dummy.scale.set(0.04 + Math.random() * 0.03, s, 0.04);
+      dummy.updateMatrix();
+      ref.current.setMatrixAt(i, dummy.matrix);
+    }
+    ref.current.instanceMatrix.needsUpdate = true;
+  }, [dummy]);
+
+  return (
+    <instancedMesh ref={ref} args={[undefined, undefined, count]}>
+      <coneGeometry args={[0.45, 1.4, 3]} />
+      <meshStandardMaterial color="#8a9a72" roughness={1} flatShading />
+    </instancedMesh>
+  );
+}
+
+/** 花粉光点 */
+function Pollen() {
+  const count = 50;
+  const positions = useMemo(() => {
+    const arr = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      arr[i * 3] = (Math.random() - 0.5) * 16;
+      arr[i * 3 + 1] = -0.5 + Math.random() * 3.5;
+      arr[i * 3 + 2] = (Math.random() - 0.5) * 12 - 1;
+    }
+    return arr;
+  }, []);
+
+  const ref = useRef<THREE.Points>(null);
+  useFrame((state) => {
+    if (!ref.current) return;
+    const t = state.clock.elapsedTime;
+    ref.current.rotation.y = t * 0.02;
+    ref.current.position.y = Math.sin(t * 0.2) * 0.08;
+  });
+
+  return (
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+      </bufferGeometry>
+      <pointsMaterial size={0.06} color="#f4efe4" transparent opacity={0.55} sizeAttenuation />
+    </points>
+  );
+}
+
+/** 花田布置 */
+const FLOWER_SPOTS: { p: [number, number, number]; s: number; ph: number }[] = [
+  // 主花
+  { p: [0, -0.9, 0], s: 2.5, ph: 0 },
+  // 前景
+  { p: [-2.6, -1.05, 1.6], s: 1.35, ph: 0.4 },
+  { p: [2.4, -1.1, 1.4], s: 1.2, ph: 1.1 },
+  // 中景
+  { p: [-3.6, -1.0, -0.2], s: 1.6, ph: 1.8 },
+  { p: [3.5, -1.05, -0.1], s: 1.45, ph: 2.3 },
+  { p: [-1.5, -1.1, 2.4], s: 0.85, ph: 0.9 },
+  { p: [1.7, -1.15, 2.2], s: 0.75, ph: 2.8 },
+  // 远景小花
+  { p: [-5.2, -1.05, -2.2], s: 1.1, ph: 0.2 },
+  { p: [5.0, -1.1, -2.0], s: 1.0, ph: 1.5 },
+  { p: [-4.2, -1.1, -3.5], s: 0.9, ph: 2.0 },
+  { p: [4.4, -1.15, -3.2], s: 0.85, ph: 0.6 },
+  { p: [0.2, -1.2, -4.5], s: 1.0, ph: 1.2 },
+  { p: [-2.0, -1.2, -5.0], s: 0.9, ph: 2.6 },
+  { p: [2.2, -1.2, -5.2], s: 0.8, ph: 3.0 },
+];
 
 function CameraRig({
   progress,
@@ -101,17 +196,17 @@ function CameraRig({
   active: boolean;
 }) {
   const { camera } = useThree();
-  const target = useMemo(() => new THREE.Vector3(0, 0.2, 0), []);
+  const target = useMemo(() => new THREE.Vector3(0, 0.15, 0), []);
 
   useFrame((state) => {
     if (!active) return;
     const p = progress.current;
     const t = state.clock.elapsedTime;
-    const orbit = t * 0.05 + p * 0.45;
-    const radius = 5.0 - p * 1.0;
-    camera.position.x = Math.sin(orbit) * radius + state.pointer.x * 0.18;
+    const orbit = t * 0.045 + p * 0.4;
+    const radius = 5.2 - p * 1.0;
+    camera.position.x = Math.sin(orbit) * radius + state.pointer.x * 0.16;
     camera.position.z = Math.cos(orbit) * radius;
-    camera.position.y = 1.0 - p * 0.2 + state.pointer.y * 0.1;
+    camera.position.y = 0.85 - p * 0.15 + state.pointer.y * 0.08;
     camera.lookAt(target);
   });
   return null;
@@ -127,21 +222,20 @@ function Scene({
   return (
     <>
       <color attach="background" args={["#e8c8c4"]} />
-      <fog attach="fog" args={["#e4c0bc", 10, 26]} />
-      <ambientLight intensity={1.15} color="#f5ebe4" />
-      <directionalLight position={[4, 8, 3]} intensity={1.35} color="#fff6f0" />
+      <fog attach="fog" args={["#e4c0bc", 12, 32]} />
+      <ambientLight intensity={1.2} color="#f5ebe4" />
+      <directionalLight position={[4, 8, 3]} intensity={1.4} color="#fff6f0" />
       <directionalLight position={[-3, 4, -2]} intensity={0.55} color="#b8d0e0" />
 
       <CameraRig progress={scrollProgress} active={active} />
       <Ground />
+      <GrassField />
       <DistantHills />
+      <Pollen />
 
-      {/* 原版模型 */}
-      <FlowerInstance position={[0, -0.9, 0]} scale={2.4} phase={0} />
-      <FlowerInstance position={[-2.8, -1.0, 0.6]} scale={1.5} phase={1.2} />
-      <FlowerInstance position={[2.6, -1.05, 0.4]} scale={1.35} phase={2.4} />
-      <FlowerInstance position={[-1.4, -1.1, 1.8]} scale={1.0} phase={0.7} />
-      <FlowerInstance position={[1.6, -1.15, 1.5]} scale={0.9} phase={3.1} />
+      {FLOWER_SPOTS.map((f, i) => (
+        <FlowerInstance key={i} position={f.p} scale={f.s} phase={f.ph} />
+      ))}
     </>
   );
 }
