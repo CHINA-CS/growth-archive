@@ -17,26 +17,44 @@ type Props = {
   featured: { id: string; title: string; summary: string; slug: string; stack: string[] }[];
 };
 
+type Phase = "loader" | "portal" | "hero";
+
 /**
- * 全屏 3D 叙事：loader → WebGL 晶体 hero → 章节内容
- * 3D 为主视觉，2D 只做纸感编辑层
+ * 流程对齐 2019.makemepulse 实测：
+ * 树 loader（灰蓝纸）→ 奶油大圆展开 + 字标 → 圆形 Enter → WebGL 晶体叙事
  */
 export function LandingExperience({ name, title, bio, featured }: Props) {
-  const [phase, setPhase] = useState<"loader" | "hero">("loader");
+  const [phase, setPhase] = useState<Phase>("loader");
   const [progress, setProgress] = useState(0);
+  const [circleIn, setCircleIn] = useState(false);
+  const [markIn, setMarkIn] = useState(false);
+  const [enterIn, setEnterIn] = useState(false);
 
   useEffect(() => {
     let raf = 0;
     const t0 = performance.now();
     const tick = (t: number) => {
-      const p = Math.min(1, (t - t0) / 2400);
+      const p = Math.min(1, (t - t0) / 2200);
       setProgress(p);
       if (p < 1) raf = requestAnimationFrame(tick);
-      else setTimeout(() => setPhase("hero"), 220);
+      else setTimeout(() => setPhase("portal"), 180);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, []);
+
+  // portal：圆展开 → 字标 → Enter
+  useEffect(() => {
+    if (phase !== "portal") return;
+    const t1 = setTimeout(() => setCircleIn(true), 40);
+    const t2 = setTimeout(() => setMarkIn(true), 700);
+    const t3 = setTimeout(() => setEnterIn(true), 1200);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
+  }, [phase]);
 
   if (phase === "loader") {
     return (
@@ -49,16 +67,54 @@ export function LandingExperience({ name, title, bio, featured }: Props) {
     );
   }
 
+  if (phase === "portal") {
+    return (
+      <div className="fixed inset-0 z-[90] overflow-hidden bg-[#6b7288] bg-[url('/mm/background_blue_pattern.jpg')] bg-repeat">
+        {/* 奶油大圆：从中心 scale 展开 */}
+        <div
+          className="absolute left-1/2 top-1/2 h-[min(92vw,78vh)] w-[min(92vw,78vh)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#f3eee3] bg-[url('/mm/background_white_pattern.jpg')] bg-repeat transition-transform duration-[1100ms] ease-[cubic-bezier(0.215,0.61,0.355,1)]"
+          style={{
+            transform: `translate(-50%, -50%) scale(${circleIn ? 1 : 0.08})`,
+            boxShadow: "0 20px 60px rgba(20,30,50,0.18)",
+          }}
+        />
+
+        {/* 字标 */}
+        <div
+          className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-700 ${
+            markIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
+          }`}
+        >
+          <p className="chapter-num mb-3 text-[#5b6a8a]">A Personal Growth Tale</p>
+          <h1 className="display-xl max-w-[12ch] text-center text-[#5b6a8a]">{name}</h1>
+          <p className="mt-3 display-sm text-[#7d8aa3]">{title}</p>
+        </div>
+
+        {/* 圆形 Enter —— 对齐原站 circle cursor CTA */}
+        <button
+          type="button"
+          onClick={() => setPhase("hero")}
+          className={`absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[#3d4a68] bg-[#f3eee3]/90 font-display text-[11px] font-bold uppercase tracking-[0.2em] text-[#3d4a68] transition-all duration-500 hover:scale-110 hover:bg-[#ebe4d4] ${
+            enterIn ? "scale-100 opacity-100" : "scale-75 opacity-0 pointer-events-none"
+          }`}
+          aria-label="Enter experience"
+        >
+          Enter
+        </button>
+
+        <p className="absolute bottom-10 right-10 font-display text-[11px] font-semibold uppercase tracking-wide2 text-[#ebe4d4]">
+          Best experienced with sound
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="relative">
-      {/* 固定全屏 3D 世界 */}
       <CrystalWorld />
 
-      {/* 浮层内容：与 3D 分层，保证可读 */}
       <div className="relative z-10">
-        {/* Hero：晶体占上半，标题压在水面暗带 — 对齐原站字标位置 */}
         <section className="relative flex min-h-[100vh] flex-col items-center justify-end px-6 pb-[12vh] pt-16 text-center">
-          {/* 底部压暗，保证字标对比 */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-[linear-gradient(180deg,transparent,rgba(45,58,82,0.55)_45%,rgba(40,52,74,0.72))]" />
           <div className="relative z-10 flex flex-col items-center">
             <p className="chapter-num mb-3 text-[#f4efe4]/85 drop-shadow-[0_1px_6px_rgba(20,30,50,0.55)]">
@@ -88,7 +144,6 @@ export function LandingExperience({ name, title, bio, featured }: Props) {
           </div>
         </section>
 
-        {/* Chapter 01 — Works */}
         <section
           id="chapter-works"
           className="relative border-y border-slateink/15 bg-paper/90 py-20"
@@ -101,7 +156,11 @@ export function LandingExperience({ name, title, bio, featured }: Props) {
             <div className="space-y-5">
               {featured.length === 0 && (
                 <p className="text-[13px] text-slateink">
-                  暂无公开项目。到 <Link href="/admin" className="underline">后台</Link> 创建并设为 public。
+                  暂无公开项目。到{" "}
+                  <Link href="/admin" className="underline">
+                    后台
+                  </Link>{" "}
+                  创建并设为 public。
                 </p>
               )}
               {featured.map((p, i) => (
@@ -134,7 +193,6 @@ export function LandingExperience({ name, title, bio, featured }: Props) {
           </div>
         </section>
 
-        {/* Chapter 02 — Intro */}
         <section className="relative border-b border-slateink/15 bg-paper/90 py-20">
           <div className="mx-auto max-w-3xl px-6">
             <div className="section-rule mb-6">
@@ -156,7 +214,6 @@ export function LandingExperience({ name, title, bio, featured }: Props) {
           </div>
         </section>
 
-        {/* Chapter 03 — Index */}
         <section className="relative bg-paper/92 py-20">
           <div className="mx-auto max-w-4xl px-6">
             <div className="section-rule mb-8">

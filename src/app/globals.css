@@ -105,11 +105,32 @@ body {
 }
 
 .site-cursor-ring.is-hover {
-  width: 44px;
-  height: 44px;
-  margin: -22px 0 0 -22px;
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
   border-color: rgba(91, 106, 138, 1);
-  background: rgba(168, 192, 212, 0.12);
+  background: rgba(243, 238, 227, 0.55);
+}
+
+.site-cursor-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-deep);
+  opacity: 0;
+  transition: opacity 0.25s ease 0.05s;
+  pointer-events: none;
+}
+
+.site-cursor-ring.is-hover .site-cursor-label {
+  opacity: 1;
 }
 
 .site-cursor-dot.is-hidden,
