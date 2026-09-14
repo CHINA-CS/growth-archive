@@ -42,18 +42,16 @@ const config: Config = {
       },
       fontFamily: {
         display: [
+          "var(--font-montserrat)",
           "Gotham",
           "Montserrat",
           "Futura",
           "Avenir Next",
           "system-ui",
-          "-apple-system",
-          "Segoe UI",
-          "PingFang SC",
-          "Microsoft YaHei",
           "sans-serif",
         ],
         sans: [
+          "var(--font-montserrat)",
           "system-ui",
           "-apple-system",
           "Segoe UI",
