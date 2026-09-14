@@ -130,7 +130,9 @@ export function SiteCursor() {
   return (
     <>
       <canvas ref={canvasRef} aria-hidden className="cursor-trail pointer-events-none fixed inset-0 z-[9998]" />
-      <div ref={ringRef} className="site-cursor-ring" aria-hidden />
+      <div ref={ringRef} className="site-cursor-ring" aria-hidden>
+        <span className="site-cursor-label">Enter</span>
+      </div>
       <div ref={dotRef} className="site-cursor-dot" aria-hidden />
     </>
   );
