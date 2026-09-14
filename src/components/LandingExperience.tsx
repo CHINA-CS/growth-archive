@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { TreeLoader } from "@/components/TreeLoader";
 
 const CrystalWorld = dynamic(
   () => import("@/components/CrystalWorld").then((m) => m.CrystalWorld),
@@ -28,7 +29,7 @@ export function LandingExperience({ name, title, bio, featured }: Props) {
     let raf = 0;
     const t0 = performance.now();
     const tick = (t: number) => {
-      const p = Math.min(1, (t - t0) / 2000);
+      const p = Math.min(1, (t - t0) / 2400);
       setProgress(p);
       if (p < 1) raf = requestAnimationFrame(tick);
       else setTimeout(() => setPhase("hero"), 220);
@@ -39,13 +40,8 @@ export function LandingExperience({ name, title, bio, featured }: Props) {
 
   if (phase === "loader") {
     return (
-      <div className="fixed inset-0 z-[90] flex items-center justify-center bg-[#6b7288] bg-[url('/mm/background_blue_pattern.jpg')] bg-repeat">
-        <div className="relative flex h-[280px] w-2 flex-col justify-end overflow-hidden">
-          <div
-            className="w-full bg-[#f4efe4]"
-            style={{ height: `${progress * 100}%` }}
-          />
-        </div>
+      <div className="fixed inset-0 z-[90] flex flex-col items-center justify-center bg-[#6b7288] bg-[url('/mm/background_blue_pattern.jpg')] bg-repeat">
+        <TreeLoader progress={progress} />
         <p className="absolute bottom-10 right-10 font-display text-[11px] font-semibold uppercase tracking-wide2 text-[#f4efe4]">
           Best experienced with sound
         </p>
