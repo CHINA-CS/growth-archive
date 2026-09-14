@@ -1,0 +1,300 @@
+{
+  "profile": {
+    "id": "profile",
+    "visibility": "public",
+    "tags": [
+      "C++",
+      "工具链"
+    ],
+    "createdAt": "2026-09-14T01:40:15.837Z",
+    "updatedAt": "2026-09-14T01:48:25.692Z",
+    "name": "陈顺",
+    "title": "三维软件开发",
+    "avatar": "",
+    "bio": "关注工程效率与可维护性，做过若干客户端与工具项目。这里同步我的作品、技能与学习记录，部分内容仅自己可见。",
+    "location": "成都",
+    "email": "3444572472@qq.com",
+    "links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/"
+      },
+      {
+        "label": "邮箱",
+        "url": "mailto:hello@example.com"
+      }
+    ]
+  },
+  "skills": [
+    {
+      "id": "skill_cpp",
+      "visibility": "public",
+      "tags": [
+        "语言"
+      ],
+      "createdAt": "2026-09-14T01:40:15.837Z",
+      "updatedAt": "2026-09-14T01:48:25.692Z",
+      "name": "C++",
+      "category": "编程语言",
+      "level": 4,
+      "description": "现代 C++ 实践，模块拆分、内存与性能意识",
+      "projectIds": [
+        "proj_toolkit"
+      ]
+    },
+    {
+      "id": "skill_blueprint",
+      "visibility": "public",
+      "tags": [
+        "可视化"
+      ],
+      "createdAt": "2026-09-14T01:40:15.837Z",
+      "updatedAt": "2026-09-14T01:48:25.692Z",
+      "name": "可视化节点/蓝图类工作流",
+      "category": "工具能力",
+      "level": 3,
+      "description": "以截图+说明沉淀节点逻辑与调试图",
+      "projectIds": [
+        "proj_toolkit"
+      ]
+    },
+    {
+      "id": "skill_git",
+      "visibility": "public",
+      "tags": [
+        "工程"
+      ],
+      "createdAt": "2026-09-14T01:40:15.837Z",
+      "updatedAt": "2026-09-14T01:48:25.692Z",
+      "name": "Git / 协作",
+      "category": "工程能力",
+      "level": 4,
+      "description": "分支策略、代码评审、可复现构建",
+      "projectIds": []
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj_toolkit",
+      "visibility": "public",
+      "tags": [
+        "C++",
+        "工具"
+      ],
+      "createdAt": "2026-09-14T01:40:15.837Z",
+      "updatedAt": "2026-09-14T01:48:25.692Z",
+      "title": "个人工具链示例项目",
+      "slug": "sample-toolkit",
+      "summary": "用 C++ 做的命令行/本地工具集合，强调可测试与可维护。",
+      "role": "独立开发",
+      "status": "done",
+      "featured": true,
+      "stack": [
+        "C++17",
+        "CMake",
+        "Python"
+      ],
+      "metrics": [
+        {
+          "label": "构建时间",
+          "value": "降低约 40%"
+        },
+        {
+          "label": "覆盖测试",
+          "value": "核心模块单测"
+        }
+      ],
+      "body": "## 背景\n\n日常开发中重复操作多，希望沉淀一套可复用的本地工具。\n\n## 做法\n\n- 模块化拆分核心逻辑\n- 统一命令行入口与配置\n- 用截图/代码片段记录关键实现\n\n## 结果\n\n示例项目，可在后台替换成你的真实项目。",
+      "cover": "",
+      "mediaIds": [
+        "media_code_sample",
+        "media_shot_sample"
+      ]
+    },
+    {
+      "id": "proj_private_draft",
+      "visibility": "private",
+      "tags": [
+        "草稿"
+      ],
+      "createdAt": "2026-09-14T01:40:15.837Z",
+      "updatedAt": "2026-09-14T01:48:25.692Z",
+      "title": "私密草稿项目（默认不可见）",
+      "slug": "private-draft",
+      "summary": "上传默认 private，只有本地后台可见。",
+      "role": "",
+      "status": "in-progress",
+      "featured": false,
+      "stack": [],
+      "metrics": [],
+      "body": "这是私密内容示例：公开站不会展示此项目。",
+      "cover": "",
+      "mediaIds": []
+    }
+  ],
+  "tools": [
+    {
+      "id": "tool_vs",
+      "visibility": "public",
+      "tags": [
+        "IDE"
+      ],
+      "createdAt": "2026-09-14T01:40:15.837Z",
+      "updatedAt": "2026-09-14T01:48:25.692Z",
+      "name": "Visual Studio / VS Code",
+      "category": "开发环境",
+      "level": 4,
+      "scenes": "日常编码、调试、远程开发",
+      "link": ""
+    },
+    {
+      "id": "tool_cmake",
+      "visibility": "public",
+      "tags": [
+        "构建"
+      ],
+      "createdAt": "2026-09-14T01:40:15.837Z",
+      "updatedAt": "2026-09-14T01:48:25.692Z",
+      "name": "CMake",
+      "category": "构建",
+      "level": 3,
+      "scenes": "跨平台构建与依赖组织",
+      "link": ""
+    }
+  ],
+  "experiences": [
+    {
+      "id": "exp_edu",
+      "visibility": "public",
+      "tags": [],
+      "createdAt": "2026-09-14T01:40:15.837Z",
+      "updatedAt": "2026-09-14T01:48:25.692Z",
+      "type": "edu",
+      "org": "某某大学",
+      "title": "计算机科学与技术",
+      "start": "2018-09",
+      "end": "2022-06",
+      "bullets": [
+        "主修课程：数据结构、操作系统、计算机网络"
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "id": "tl_1",
+      "visibility": "public",
+      "tags": [
+        "里程碑"
+      ],
+      "createdAt": "2026-09-14T01:40:15.837Z",
+      "updatedAt": "2026-09-14T01:48:25.692Z",
+      "date": "2026-01",
+      "title": "开始搭建个人成长档案站",
+      "kind": "milestone",
+      "description": "把项目、笔记、素材集中管理，并区分公开/私密。",
+      "relatedIds": [
+        "proj_toolkit"
+      ]
+    },
+    {
+      "id": "tl_0",
+      "visibility": "private",
+      "tags": [],
+      "createdAt": "2026-09-14T01:40:15.837Z",
+      "updatedAt": "2026-09-14T01:48:25.692Z",
+      "date": "2025-06",
+      "title": "私密：某次内部复盘",
+      "kind": "study",
+      "description": "仅自己可见的时间线节点。",
+      "relatedIds": []
+    }
+  ],
+  "notes": [
+    {
+      "id": "note_1",
+      "visibility": "public",
+      "tags": [
+        "C++",
+        "工程"
+      ],
+      "createdAt": "2026-09-14T01:40:15.837Z",
+      "updatedAt": "2026-09-14T01:48:25.692Z",
+      "title": "如何用代码+截图沉淀技术细节",
+      "slug": "code-and-screenshot",
+      "excerpt": "公开作品里代码片段配关键截图，比长篇更易读。",
+      "body": "## 原则\n\n1. 代码只保留「关键路径」\n2. 截图标注输入输出或调用关系\n3. 私密草稿可以先写 log，成熟后再公开\n",
+      "kind": "post"
+    },
+    {
+      "id": "note_log",
+      "visibility": "private",
+      "tags": [
+        "学习日志"
+      ],
+      "createdAt": "2026-09-14T01:40:15.837Z",
+      "updatedAt": "2026-09-14T01:48:25.692Z",
+      "title": "学习日志（默认私密）",
+      "slug": "private-log",
+      "excerpt": "给自己看的过程记录。",
+      "body": "今天读了 xxx，做了 yyy。",
+      "kind": "log"
+    }
+  ],
+  "media": [
+    {
+      "id": "media_code_sample",
+      "visibility": "public",
+      "tags": [
+        "C++"
+      ],
+      "createdAt": "2026-09-14T01:40:15.837Z",
+      "updatedAt": "2026-09-14T01:48:25.692Z",
+      "kind": "code",
+      "title": "示例代码片段",
+      "description": "演示媒体库中的代码条目",
+      "path": "samples/hello.cpp",
+      "mime": "text/plain",
+      "size": 120,
+      "language": "cpp",
+      "relatedProjectId": "proj_toolkit"
+    },
+    {
+      "id": "media_shot_sample",
+      "visibility": "public",
+      "tags": [
+        "截图"
+      ],
+      "createdAt": "2026-09-14T01:40:15.837Z",
+      "updatedAt": "2026-09-14T01:48:25.692Z",
+      "kind": "image",
+      "title": "示例截图占位",
+      "description": "可替换为真实项目截图",
+      "path": "",
+      "mime": "image/png",
+      "size": 0,
+      "relatedProjectId": "proj_toolkit"
+    }
+  ],
+  "resume": {
+    "id": "resume",
+    "visibility": "public",
+    "tags": [],
+    "createdAt": "2026-09-14T01:40:15.837Z",
+    "updatedAt": "2026-09-14T01:48:25.692Z",
+    "headline": "C++ / 工具链工程师",
+    "summary": "具备完整项目落地经验，重视工程化与可维护性。本站作品与技能可按岗位裁剪公开范围。",
+    "highlights": [
+      "独立交付工具项目",
+      "代码+截图可追溯的文档习惯",
+      "默认私密的记录体系"
+    ],
+    "skillGroups": [
+      "C++",
+      "工程工具",
+      "协作"
+    ],
+    "projectIds": [
+      "proj_toolkit"
+    ]
+  }
+}

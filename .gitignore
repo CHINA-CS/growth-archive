@@ -1,0 +1,13 @@
+node_modules
+.next
+out
+.env
+.env.local
+content/media/*
+!content/media/.gitkeep
+public/media/*
+!public/media/.gitkeep
+content/db.public.json
+*.log
+.DS_Store
+tsconfig.tsbuildinfo
