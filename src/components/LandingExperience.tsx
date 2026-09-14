@@ -91,7 +91,7 @@ export function LandingExperience({ name, title, bio, featured }: Props) {
         {/* Chapter 01 — Works */}
         <section
           id="chapter-works"
-          className="relative border-y border-slateink/15 bg-paper/55 py-20 backdrop-blur-[6px]"
+          className="relative border-y border-slateink/15 bg-paper/90 py-20"
         >
           <div className="mx-auto max-w-4xl px-6">
             <div className="section-rule mb-8">
@@ -135,7 +135,7 @@ export function LandingExperience({ name, title, bio, featured }: Props) {
         </section>
 
         {/* Chapter 02 — Intro */}
-        <section className="relative border-b border-slateink/15 bg-paper/55 py-20 backdrop-blur-[2px]">
+        <section className="relative border-b border-slateink/15 bg-paper/90 py-20">
           <div className="mx-auto max-w-3xl px-6">
             <div className="section-rule mb-6">
               <p className="chapter-num">Chapter 02</p>
@@ -157,7 +157,7 @@ export function LandingExperience({ name, title, bio, featured }: Props) {
         </section>
 
         {/* Chapter 03 — Index */}
-        <section className="relative bg-paper/70 py-20 backdrop-blur-[2px]">
+        <section className="relative bg-paper/92 py-20">
           <div className="mx-auto max-w-4xl px-6">
             <div className="section-rule mb-8">
               <p className="chapter-num">Chapter 03</p>
